@@ -1,34 +1,22 @@
 # Tweet Sentiment Extraction
 
-Jupyter Notebook for tweet-sentiment-extraction [kaggle](https://www.kaggle.com/c/tweet-sentiment-extraction) competition.
+Jupyter Notebook for tweet-sentiment-extraction [kaggle](https://www.kaggle.com/c/tweet-sentiment-extraction) competition. The 
 
-## Description
+## Brief comptetition description
 
-"My ridiculous dog is amazing." [sentiment: positive]
+The competition aims at picking the phrase that reflects the labeled sentiment on a tweet. A tweet can be positive, negative or neutral, but identifying the words that best highlight those classifications is an intricate task.
 
-With all of the tweets circulating every second it is hard to tell whether the sentiment behind a specific tweet will impact a company, or a person's, brand for being viral (positive), or devastate profit because it strikes a negative tone. Capturing sentiment in language is important in these times where decisions and reactions are created and updated in seconds. But, which words actually lead to the sentiment description? In this competition you will need to pick out the part of the tweet (word or phrase) that reflects the sentiment.
-
-Help build your skills in this important area with this broad dataset of tweets. Work on your technique to grab a top spot in this competition. What words in tweets support a positive, negative, or neutral sentiment? How can you help make that determination using machine learning tools?
-
-In this competition we've extracted support phrases from Figure Eight's Data for Everyone platform. The dataset is titled Sentiment Analysis: Emotion in Text tweets with existing sentiment labels, used here under creative commons attribution 4.0. international licence. Your objective in this competition is to construct a model that can do the same - look at the labeled sentiment for a given tweet and figure out what word or phrase best supports it.
-
-Disclaimer: The dataset for this competition contains text that may be considered profane, vulgar, or offensive.
-
-## Dataset
-
-| textID        | text                                             | selected_text                       | sentiment |
-|:-------------:|:------------------------------------------------:|:-----------------------------------:|:---------:|
-| cb774db0d1    | I`d have responded, if I were going              | I`d have responded, if I were going | neutral   |
-| 549e992a42    | Sooo SAD I will miss you here in San Diego!!!    | Sooo SAD                            | negative  |
-| 088c60f138    | my boss is bullying me...                        | bullying me                         | negative  |
-| 9642c003ef    | what interview! leave me alone                   | leave me alone                      | negative  |
-| 358bd9e861    | Sons of ****, why couldn`t they put them on t... | Sons of ****,                       | negative  |
+For instance, given a tweet "My dog is awesome", labeled as positive, we should develop an algorithm to choose "is awesome" as the best phrase to reflect that sentiment.
 
 ## Build roBERTa Model
 
-As we want to use a pretrained roBERTa base model, we will add custom layers to it in order to make our model appropriated to our problem. Hence, the first tokens are input into bert_model and its output is x as below. Also is worth mentioning that the previous output has a shape in a form of (batch_size, MAX_LEN, 768). Next, we drop out randomly sets input with frequency rate between 0% and 10%, in order to avoid overfitting. Then, we use a 1D convolutional layer three times with 128, 64, and 32 filters, respectively, in such a way that for the first two, we use a LeakyRelU activation layer. After the third one, we use a regular densely-connected NN layer, where N=1. Then, we use another LeakyRelU activation layer. Finally, we flatten the result and, after that, we apply a softmax activation layer to convert a real vector to a vector of categorical probabilities. Hence, the model output x1 for the start tokens indices and x2 for the end tokens indices.
+[This](https://www.kaggle.com/cdeotte/tensorflow-roberta-0-705) notebook inspired our work as a way to learn state-of-the art netural language techniques. Many sections of our notebook are similiar to the aforementioned one. We intended to dive into fine-tuning the roBERTa model for this competition.
 
-After all, we use a Fine Tuning technique to optimize the model by using [Adam algorithm](https://keras.io/api/optimizers/adam/) and compile with categorical_crossentropy as the loss function.
+We used a pretrained roBERTa base model with custom layers to adpat its output for our problem. The encoded tweet goes through roBERTa that outputs the variable ```x```. Next, we use dropout to avoid overfitting and three conlutional layers with 128, 64, and 32 filters, each. After that, we use a regular densely-connected NN layer with a LeakyReLu activation.  Finally, we flatten the result and we apply a softmax activation to convert a real vector to a distribuiton of probabilities.
+
+The outputs ```x1``` and ```x2``` represent the start and the end position of the picked sentiment phrase according to the tokenized tweet.
+
+After all, we use a Fine Tuning technique to optimize the model by using [Adam algorithm](https://keras.io/api/optimizers/adam/) and the Categorical Crossentropy loss function.
 
 ```python
 def build_model():
@@ -72,73 +60,20 @@ model = build_model()
 model.summary()
 ```
 ```
-All model checkpoint layers were used when initializing TFRobertaModel.
 
-All the layers of TFRobertaModel were initialized from the model checkpoint at /content/drive/MyDrive/PO-240/Files/pretrained-roberta-base.h5.
-If your task is similar to the task the model of the checkpoint was trained on, you can already use TFRobertaModel for predictions without further training.
-Model: "functional_3"
-__________________________________________________________________________________________________
-Layer (type)                    Output Shape         Param #     Connected to                     
-==================================================================================================
-input_4 (InputLayer)            [(None, 96)]         0                                            
-__________________________________________________________________________________________________
-input_5 (InputLayer)            [(None, 96)]         0                                            
-__________________________________________________________________________________________________
-input_6 (InputLayer)            [(None, 96)]         0                                            
-__________________________________________________________________________________________________
-tf_roberta_model_1 (TFRobertaMo TFBaseModelOutputWit 124645632   input_4[0][0]                    
-                                                                 input_5[0][0]                    
-                                                                 input_6[0][0]                    
-__________________________________________________________________________________________________
-dropout_76 (Dropout)            (None, 96, 768)      0           tf_roberta_model_1[0][0]         
-__________________________________________________________________________________________________
-dropout_77 (Dropout)            (None, 96, 768)      0           tf_roberta_model_1[0][0]         
-__________________________________________________________________________________________________
-conv1d_2 (Conv1D)               (None, 96, 128)      196736      dropout_76[0][0]                 
-__________________________________________________________________________________________________
-conv1d_5 (Conv1D)               (None, 96, 128)      196736      dropout_77[0][0]                 
-__________________________________________________________________________________________________
-leaky_re_lu (LeakyReLU)         (None, 96, 128)      0           conv1d_2[0][0]                   
-__________________________________________________________________________________________________
-leaky_re_lu_3 (LeakyReLU)       (None, 96, 128)      0           conv1d_5[0][0]                   
-__________________________________________________________________________________________________
-conv1d_3 (Conv1D)               (None, 96, 64)       16448       leaky_re_lu[0][0]                
-__________________________________________________________________________________________________
-conv1d_6 (Conv1D)               (None, 96, 64)       16448       leaky_re_lu_3[0][0]              
-__________________________________________________________________________________________________
-leaky_re_lu_1 (LeakyReLU)       (None, 96, 64)       0           conv1d_3[0][0]                   
-__________________________________________________________________________________________________
-leaky_re_lu_4 (LeakyReLU)       (None, 96, 64)       0           conv1d_6[0][0]                   
-__________________________________________________________________________________________________
-conv1d_4 (Conv1D)               (None, 96, 32)       4128        leaky_re_lu_1[0][0]              
-__________________________________________________________________________________________________
-conv1d_7 (Conv1D)               (None, 96, 32)       4128        leaky_re_lu_4[0][0]              
-__________________________________________________________________________________________________
-dense (Dense)                   (None, 96, 1)        33          conv1d_4[0][0]                   
-__________________________________________________________________________________________________
-dense_1 (Dense)                 (None, 96, 1)        33          conv1d_7[0][0]                   
-__________________________________________________________________________________________________
-leaky_re_lu_2 (LeakyReLU)       (None, 96, 1)        0           dense[0][0]                      
-__________________________________________________________________________________________________
-leaky_re_lu_5 (LeakyReLU)       (None, 96, 1)        0           dense_1[0][0]                    
-__________________________________________________________________________________________________
-flatten_2 (Flatten)             (None, 96)           0           leaky_re_lu_2[0][0]              
-__________________________________________________________________________________________________
-flatten_3 (Flatten)             (None, 96)           0           leaky_re_lu_5[0][0]              
-__________________________________________________________________________________________________
-activation_2 (Activation)       (None, 96)           0           flatten_2[0][0]                  
-__________________________________________________________________________________________________
-activation_3 (Activation)       (None, 96)           0           flatten_3[0][0]                  
-==================================================================================================
-Total params: 125,080,322
-Trainable params: 125,080,322
-Non-trainable params: 0
-```
+
 
 ## Results
 
 ```
->>>> FOLD 5 Jaccard = 0.8055669877520152
+Kaggle private score: 0.70511
+Kaggle public score:  0.70428
 ```
 
-Read more in our jupyter notebook file!
+ ## Files
+
+Our main file is the ```roBERTa Model.ipynb```. It contains the code to train our neural network and test it.
+
+We wanted to play with the model and created another jupyter notebook ```robertaClassifier.ipynb``` to classify a tweet as negative, positve or neutral without the burden of finding the sentiment words. The model only receives as input a tweet and outputs its emotion.
+
+Moreover, in ```SentimentClassification.ipynb``` we built the complete sentiment pipeling. Given a tweet, out roBERTa classifier will tell if it is positive, negative or neutral. Then, our roBERTa model will find the words that highlight this sentiment.
