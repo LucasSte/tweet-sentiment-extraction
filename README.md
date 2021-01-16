@@ -1,18 +1,18 @@
 # Tweet Sentiment Extraction
 
-Jupyter Notebook for tweet-sentiment-extraction [kaggle](https://www.kaggle.com/c/tweet-sentiment-extraction) competition. The 
+Jupyter Notebook for tweet-sentiment-extraction [kaggle](https://www.kaggle.com/c/tweet-sentiment-extraction) competition.
 
 ## Brief comptetition description
 
-The competition aims at picking the phrase that reflects the labeled sentiment on a tweet. A tweet can be positive, negative or neutral, but identifying the words that best highlight those classifications is an intricate task.
+The competition aims at picking the phrase that reflects the labeled sentiment on a tweet. A tweet can be positive, negative or neutral, but identifying the words that best highlight those classification is an intricate task.
 
 For instance, given a tweet "My dog is awesome", labeled as positive, we should develop an algorithm to choose "is awesome" as the best phrase to reflect that sentiment.
 
 ## Build roBERTa Model
 
-[This](https://www.kaggle.com/cdeotte/tensorflow-roberta-0-705) notebook inspired our work as a way to learn state-of-the art netural language techniques. Many sections of our notebook are similiar to the aforementioned one. We intended to dive into fine-tuning the roBERTa model for this competition.
+[This](https://www.kaggle.com/cdeotte/tensorflow-roberta-0-705) notebook inspired our work as a way to learn state-of-the art natural language processing techniques. Many sections of our notebook are similiar to the aforementioned one. We intended to dive into fine-tuning the roBERTa model for this competition.
 
-We used a pretrained roBERTa base model with custom layers to adpat its output for our problem. The encoded tweet goes through roBERTa that outputs the variable ```x```. Next, we use dropout to avoid overfitting and three conlutional layers with 128, 64, and 32 filters, each. After that, we use a regular densely-connected NN layer with a LeakyReLu activation.  Finally, we flatten the result and we apply a softmax activation to convert a real vector to a distribuiton of probabilities.
+We used a pretrained roBERTa base model with custom layers to adpat its output for our problem. The encoded tweet goes through roBERTa. Next, we use dropout to avoid overfitting and three convolutional layers with 128, 64, and 32 filters each. After that, we use a regular densely-connected NN layer with a LeakyReLu activation.  Finally, we flatten the result and apply a softmax activation to convert a real vector to a distribuiton of probabilities.
 
 The outputs ```x1``` and ```x2``` represent the start and the end position of the picked sentiment phrase according to the tokenized tweet.
 
@@ -59,11 +59,7 @@ def build_model():
 model = build_model()
 model.summary()
 ```
-```
 
-
-
-## Results
 
 ```
 Kaggle private score: 0.70511
