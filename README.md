@@ -32,4 +32,6 @@ We wanted to play with the model and created another jupyter notebook ```roberta
 
 Moreover, in ```SentimentClassification.ipynb``` we built the complete sentiment pipeline. Given a tweet, out roBERTa classifier will tell if it is positive, negative or neutral. Then, our roBERTa model will find the words that highlight this sentiment.
 
+Check our releases on GitHub for the trained models.
+
 
