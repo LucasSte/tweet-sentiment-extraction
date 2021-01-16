@@ -28,7 +28,7 @@ Kaggle public score:  0.70428
 
 Our main file is the ```roBERTa Model.ipynb```. It contains the code to train our neural network and test it.
 
-We wanted to play with the model and created another jupyter notebook ```robertaClassifier.ipynb``` to classify a tweet as negative, positve or neutral without the burden of finding the sentiment words. The model only receives as input a tweet and outputs its emotion.
+We wanted to play with the model and created another jupyter notebook ```robertaClassifier.ipynb``` to classify a tweet as negative, positve or neutral without the burden of finding the sentiment words. The model only receives as input a tweet and outputs its emotion. It has two convolutional layers and two fully connected ones after roBERTa.
 
 Moreover, in ```SentimentClassification.ipynb``` we built the complete sentiment pipeline. Given a tweet, out roBERTa classifier will tell if it is positive, negative or neutral. Then, our roBERTa model will find the words that highlight this sentiment.
 
