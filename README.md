@@ -16,7 +16,7 @@ We used a pretrained roBERTa base model with custom layers to adapat its output 
 
 The model's outputs  represent the start and the end position of the picked sentiment phrase according to the tokenized tweet.
 
-We optimized the model by using [Adam algorithm](https://keras.io/api/optimizers/adam/) and the Categorical Crossentropy loss function.
+We optimized the model by using [Adam algorithm](https://keras.io/api/optimizers/adam/) and the Categorical Crossentropy loss function. Our dataset is the one available at the competition website.
 
 
 ```
@@ -31,3 +31,5 @@ Our main file is the ```roBERTa Model.ipynb```. It contains the code to train ou
 We wanted to play with the model and created another jupyter notebook ```robertaClassifier.ipynb``` to classify a tweet as negative, positve or neutral without the burden of finding the sentiment words. The model only receives as input a tweet and outputs its emotion.
 
 Moreover, in ```SentimentClassification.ipynb``` we built the complete sentiment pipeline. Given a tweet, out roBERTa classifier will tell if it is positive, negative or neutral. Then, our roBERTa model will find the words that highlight this sentiment.
+
+
