@@ -12,7 +12,7 @@ For instance, given a tweet "My dog is awesome", labeled as positive, we should 
 
 [This](https://www.kaggle.com/cdeotte/tensorflow-roberta-0-705) notebook inspired our work as a way to learn state-of-the art natural language processing techniques. Many sections of our notebook are similiar to the aforementioned one. We intended to dive into fine-tuning the roBERTa model for this competition.
 
-We used a pretrained roBERTa base model with custom layers to adapat its output for our problem. The encoded tweet goes through roBERTa. Next, we use dropout to avoid overfitting and three convolutional layers with 128, 64, and 32 filters each. After that, we use a regular densely-connected NN layer with a LeakyReLu activation.  Finally, we flatten the result and apply a softmax activation to convert a real vector to a distribuiton of probabilities.
+We used a pretrained roBERTa base model with custom layers to adapt its output for our problem. The encoded tweet goes through roBERTa. Next, we use dropout to avoid overfitting and three convolutional layers with 128, 64, and 32 filters each. After that, we use a regular densely-connected NN layer with a LeakyReLu activation.  Finally, we flatten the result and apply a softmax activation to convert a real vector to a distribuiton of probabilities.
 
 The model's outputs  represent the start and the end position of the picked sentiment phrase according to the tokenized tweet.
 
